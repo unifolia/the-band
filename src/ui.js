@@ -63,7 +63,13 @@ export function createAppShell(root) {
   error.hidden = true;
   error.setAttribute("role", "alert");
 
-  app.append(title, description, stage, playButton, status, error);
+  const footer = document.createElement("footer");
+  const footerLink = document.createElement("a");
+  footerLink.href = "https://midi.engineering/";
+  footerLink.textContent = "\uD801\uDE66 MIDI Engineering";
+  footer.append(footerLink);
+
+  app.append(title, description, stage, playButton, status, error, footer);
   root.append(app);
 
   return {
