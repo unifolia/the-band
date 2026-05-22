@@ -10,7 +10,7 @@ const PALETTES = [
     cloak: "#293924",
     accent: "#d1a447",
     eye: "#d6ff5f",
-    mud: "#3a2a1c"
+    mud: "#3a2a1c",
   },
   {
     skin: "#2b5d62",
@@ -19,7 +19,7 @@ const PALETTES = [
     cloak: "#203126",
     accent: "#b9893a",
     eye: "#a9f06a",
-    mud: "#412916"
+    mud: "#412916",
   },
   {
     skin: "#6a5f31",
@@ -28,7 +28,7 @@ const PALETTES = [
     cloak: "#27361d",
     accent: "#c5bb70",
     eye: "#f0f279",
-    mud: "#2d2119"
+    mud: "#2d2119",
   },
   {
     skin: "#4a3b5a",
@@ -37,8 +37,8 @@ const PALETTES = [
     cloak: "#1c342d",
     accent: "#86a94b",
     eye: "#d8ff79",
-    mud: "#3d2519"
-  }
+    mud: "#3d2519",
+  },
 ];
 
 const TRAITS = [
@@ -47,14 +47,19 @@ const TRAITS = [
   "mushroom-capped marsh singer",
   "mud-armored tunnel pilgrim",
   "branch-antlered fen watcher",
-  "slug-tailed lowland wanderer"
+  "slug-tailed lowland wanderer",
 ];
 
 export function renderSprites(seed, band) {
   return Array.from({ length: 4 }, (_, index) => {
     const memberSeed = deriveSeed(seed, 0x5100n + BigInt(index * 97 + 11));
     const role = index === 0 ? "percussionist" : "instrumentalist";
-    return createCreatureSprite(memberSeed.value, index, role, getMemberInstrument(band, index));
+    return createCreatureSprite(
+      memberSeed.value,
+      index,
+      role,
+      getMemberInstrument(band, index),
+    );
   });
 }
 
@@ -75,7 +80,10 @@ function createCreatureSprite(seedValue, index, role, instrument) {
   svg.setAttribute("width", "32");
   svg.setAttribute("height", "32");
   svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", `${role} sprite: ${trait} with ${formatInstrumentName(instrument)}`);
+  svg.setAttribute(
+    "aria-label",
+    `${role} sprite: ${trait} with ${formatInstrumentName(instrument)}`,
+  );
   svg.setAttribute("shape-rendering", "crispEdges");
   svg.classList.add("creature-sprite");
 
@@ -120,7 +128,8 @@ function formatInstrumentName(instrument) {
 
 function prepareCreature(seedValue, index) {
   const rng = new Rng(seedValue);
-  const palette = PALETTES[(rng.int(0, PALETTES.length - 1) + index) % PALETTES.length];
+  const palette =
+    PALETTES[(rng.int(0, PALETTES.length - 1) + index) % PALETTES.length];
   const trait = TRAITS[(rng.int(0, TRAITS.length - 1) + index) % TRAITS.length];
   return { rng, palette, trait };
 }
@@ -132,7 +141,10 @@ function buildBodyRows(rng, top, bottom, index) {
     const progress = (y - top) / Math.max(1, bottom - top);
     const waist = Math.round(Math.sin(progress * Math.PI) * belly);
     const irregular = rng.chance(0.18) ? 1 : 0;
-    const width = Math.max(3, 3 + waist + irregular + (index === 0 && y % 3 === 0 ? 1 : 0));
+    const width = Math.max(
+      3,
+      3 + waist + irregular + (index === 0 && y % 3 === 0 ? 1 : 0),
+    );
     rows.push({ y, left: 16 - width, right: 16 + width - 1 });
   }
   return rows;
@@ -204,7 +216,14 @@ function addAccessories(svg, rng, palette, trait, role) {
 
   if (trait.includes("reed")) {
     for (let x = 11; x <= 21; x += 2) {
-      addRect(svg, x, rng.int(2, 5), 1, rng.int(5, 9), rng.chance(0.5) ? "#6e7b31" : "#9a8d3b");
+      addRect(
+        svg,
+        x,
+        rng.int(2, 5),
+        1,
+        rng.int(5, 9),
+        rng.chance(0.5) ? "#6e7b31" : "#9a8d3b",
+      );
     }
   }
 

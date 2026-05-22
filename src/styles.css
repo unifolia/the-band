@@ -11,19 +11,10 @@
 }
 
 :root {
-  --ink: #050706;
   --blackwater: #07110e;
-  --deep-bog: #0d211c;
-  --bog-glass: #173a31;
-  --peat: #2a1d13;
-  --mud: #46311f;
-  --moss: #7f903a;
-  --lichen: #c0bf65;
-  --ochre: #d2a548;
   --acid-eye: #dfff67;
   --bone: #e0d5a1;
   --error: #ffb07e;
-  --shadow: rgba(0, 0, 0, 0.58);
   --pixel: 4px;
   color: var(--bone);
   background: var(--blackwater);
@@ -127,8 +118,8 @@ button {
     Georgia, serif;
   font-size: clamp(4.25rem, 14vw, 8rem);
   font-variant: small-caps;
-  font-weight: 700;
-  letter-spacing: 0;
+  font-weight: 500;
+  letter-spacing: -0.3rem;
   line-height: 0.92;
   text-align: center;
   transform: translateY(8px);
@@ -170,7 +161,6 @@ button {
   border: var(--pixel) solid rgba(35, 25, 15, 0.88);
   box-shadow:
     0 10px 0 #070907,
-    inset 0 0px 0 rgba(192, 191, 101, 0.1),
     0 0 54px rgba(127, 144, 58, 0.18);
   content: "";
 }
@@ -182,9 +172,8 @@ button {
   background:
     radial-gradient(ellipse at 50% 76%, rgba(23, 58, 49, 0.7), transparent 55%),
     linear-gradient(180deg, transparent, rgba(2, 4, 3, 0.42));
-  filter: blur(0);
   content: "";
-  box-shadow: 0px 0px 70px #0000007a;
+  box-shadow: 0 0 70px #0000007a;
   border-radius: 10px;
 }
 
@@ -192,30 +181,35 @@ button {
   grid-column: 1 / -1;
   align-self: start;
   max-width: 38rem;
-  margin: 0px auto 2rem;
+  margin: 0 auto;
   text-align: center;
 }
 
 .stage-text,
 .stage-tagline {
   margin: 0;
-  color: rgba(224, 213, 161, 0.82);
-  font-family:
-    "American Typewriter", "Iowan Old Style", "Cochin", Georgia, serif;
-  font-weight: 700;
   line-height: 1.35;
   text-shadow: 0 2px 0 #020403;
 }
 
 .stage-text {
+  color: rgba(224, 213, 161, 0.82);
+  font-family:
+    "American Typewriter", "Iowan Old Style", "Cochin", Georgia, serif;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .stage-tagline {
-  font-style: italic;
-  margin-top: 2rem;
-  color: rgba(223, 255, 103, 0.82);
-  font-size: 0.95rem;
+  letter-spacing: -0.3rem;
+  color: var(--bone);
+  font-family:
+    "KC Slime Time", "American Typewriter", ui-monospace, Menlo, Monaco,
+    Consolas, monospace;
+  font-size: 4rem;
+  font-weight: 500;
+  position: relative;
+  top: 1.5rem;
 }
 
 .band-member {
@@ -318,8 +312,8 @@ button {
     "KC Slime Time", "American Typewriter", ui-monospace, Menlo, Monaco,
     Consolas, monospace;
   font-size: 4rem;
-  font-weight: 700;
-  letter-spacing: 0;
+  font-weight: 500;
+  letter-spacing: -0.3rem;
   line-height: 1;
   background:
     linear-gradient(180deg, rgba(15, 29, 23, 0.96), rgba(5, 9, 7, 0.96)),
@@ -338,8 +332,6 @@ button {
   text-shadow: 0 2px 0 #020403;
   transform: translateY(0);
   transition:
-    background-color 150ms ease,
-    color 150ms ease,
     transform 120ms ease,
     box-shadow 150ms ease,
     filter 150ms ease;
@@ -369,7 +361,6 @@ button {
 }
 
 .play-button.is-playing {
-  color: var(--acid-eye);
   background:
     linear-gradient(180deg, rgba(24, 42, 32, 0.98), rgba(5, 9, 7, 0.96)),
     radial-gradient(
@@ -377,7 +368,6 @@ button {
       rgba(223, 255, 103, 0.22),
       transparent 62%
     );
-  border-color: #5a421e;
   box-shadow:
     0 0 0 2px #080a06,
     0 8px 0 rgba(0, 0, 0, 0.34),
@@ -479,6 +469,10 @@ footer a {
     gap: 8px 12px;
     min-height: 430px;
     padding: 26px 12px 42px;
+  }
+
+  .stage-tagline {
+    top: 1rem;
   }
 
   .creature-sprite {
