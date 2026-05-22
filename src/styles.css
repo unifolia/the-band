@@ -1,0 +1,492 @@
+@font-face {
+  font-family: "KC Slime Time";
+  src: url("/fonts/KCSlimeTime.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KC Slime Time Solid";
+  src: url("/fonts/KCSlimeTime-Solid.otf") format("opentype");
+  font-display: swap;
+}
+
+:root {
+  --ink: #050706;
+  --blackwater: #07110e;
+  --deep-bog: #0d211c;
+  --bog-glass: #173a31;
+  --peat: #2a1d13;
+  --mud: #46311f;
+  --moss: #7f903a;
+  --lichen: #c0bf65;
+  --ochre: #d2a548;
+  --acid-eye: #dfff67;
+  --bone: #e0d5a1;
+  --error: #ffb07e;
+  --shadow: rgba(0, 0, 0, 0.58);
+  --pixel: 4px;
+  color: var(--bone);
+  background: var(--blackwater);
+  font-family:
+    "American Typewriter", "Iowan Old Style", "Cochin", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--blackwater);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100svh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(
+      circle at 50% 105%,
+      rgba(160, 183, 68, 0.22) 0 12%,
+      transparent 37%
+    ),
+    radial-gradient(
+      circle at 18% 23%,
+      rgba(63, 119, 86, 0.2) 0 9%,
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 82% 28%,
+      rgba(120, 97, 38, 0.14) 0 8%,
+      transparent 30%
+    ),
+    linear-gradient(180deg, #030504 0%, var(--blackwater) 44%, #0b1712 100%);
+}
+
+body::before,
+body::after {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+}
+
+body::before {
+  opacity: 0.2;
+  background:
+    radial-gradient(
+      ellipse at 50% 72%,
+      rgba(127, 144, 58, 0.14),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse at 24% 18%,
+      rgba(209, 164, 71, 0.08),
+      transparent 42%
+    );
+  mix-blend-mode: screen;
+}
+
+body::after {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.48),
+    transparent 18%,
+    transparent 82%,
+    rgba(0, 0, 0, 0.5)
+  );
+  opacity: 0.42;
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  justify-items: center;
+  min-height: 100svh;
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 34px 18px 30px;
+}
+
+.app-title {
+  position: relative;
+  margin: 0;
+  color: var(--acid-eye);
+  font-family:
+    "KC Slime Time", Copperplate, "American Typewriter", "Iowan Old Style",
+    Georgia, serif;
+  font-size: clamp(4.25rem, 14vw, 8rem);
+  font-variant: small-caps;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 0.92;
+  text-align: center;
+  transform: translateY(8px);
+  animation: title-rise 820ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.band-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(62px, 1fr));
+  align-items: end;
+  gap: 14px;
+  width: min(100%, 780px);
+  min-height: 330px;
+  margin: 12px 0 22px;
+  padding: 54px 22px 44px;
+  isolation: isolate;
+}
+
+.band-stage::before {
+  position: absolute;
+  right: 3%;
+  bottom: 20px;
+  left: 3%;
+  z-index: -2;
+  height: 70px;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(211, 165, 72, 0.18),
+      transparent 66%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(70, 49, 31, 0),
+      rgba(70, 49, 31, 0.74) 42%,
+      rgba(6, 8, 6, 0.92)
+    );
+  border: var(--pixel) solid rgba(35, 25, 15, 0.88);
+  box-shadow:
+    0 10px 0 #070907,
+    inset 0 0px 0 rgba(192, 191, 101, 0.1),
+    0 0 54px rgba(127, 144, 58, 0.18);
+  content: "";
+}
+
+.band-stage::after {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(ellipse at 50% 76%, rgba(23, 58, 49, 0.7), transparent 55%),
+    linear-gradient(180deg, transparent, rgba(2, 4, 3, 0.42));
+  filter: blur(0);
+  content: "";
+  box-shadow: 0px 0px 70px #0000007a;
+  border-radius: 10px;
+}
+
+.stage-copy {
+  grid-column: 1 / -1;
+  align-self: start;
+  max-width: 38rem;
+  margin: 0px auto 2rem;
+  text-align: center;
+}
+
+.stage-text,
+.stage-tagline {
+  margin: 0;
+  color: rgba(224, 213, 161, 0.82);
+  font-family:
+    "American Typewriter", "Iowan Old Style", "Cochin", Georgia, serif;
+  font-weight: 700;
+  line-height: 1.35;
+  text-shadow: 0 2px 0 #020403;
+}
+
+.stage-text {
+  font-size: 1rem;
+}
+
+.stage-tagline {
+  font-style: italic;
+  margin-top: 2rem;
+  color: rgba(223, 255, 103, 0.82);
+  font-size: 0.95rem;
+}
+
+.band-member {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  min-height: 194px;
+  opacity: 0;
+  transform: translateY(22px) scale(0.92);
+  animation:
+    member-arrive 760ms cubic-bezier(0.19, 1, 0.22, 1) forwards,
+    member-idle 2800ms ease-in-out infinite;
+  animation-delay: var(--entry-delay), calc(var(--entry-delay) + 900ms);
+}
+
+.band-member::before {
+  position: absolute;
+  bottom: 13px;
+  z-index: 0;
+  width: 70%;
+  min-width: 54px;
+  max-width: 104px;
+  height: 16px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.54), transparent 70%);
+  content: "";
+}
+
+.band-member::after {
+  position: absolute;
+  right: 18%;
+  bottom: 37px;
+  left: 18%;
+  z-index: 0;
+  height: 46px;
+  background: linear-gradient(180deg, rgba(223, 255, 103, 0.07), transparent);
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+  content: "";
+}
+
+.member-name {
+  position: relative;
+  z-index: 2;
+  display: inline-grid;
+  place-items: center;
+  min-width: 46px;
+  max-width: 108px;
+  min-height: 24px;
+  margin: 0 0 8px;
+  padding: 3px 8px 4px;
+  overflow: hidden;
+  color: var(--bone);
+  font-family:
+    "American Typewriter", ui-monospace, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background:
+    linear-gradient(180deg, rgba(15, 29, 23, 0.96), rgba(5, 9, 7, 0.96)),
+    radial-gradient(
+      ellipse at center,
+      rgba(223, 255, 103, 0.16),
+      transparent 62%
+    );
+  border: 2px solid #5a421e;
+  box-shadow:
+    0 0 0 2px #080a06,
+    0 5px 0 rgba(0, 0, 0, 0.34),
+    0 0 18px rgba(223, 255, 103, 0.08);
+  text-shadow: 0 2px 0 #020403;
+}
+
+.creature-sprite {
+  position: relative;
+  z-index: 1;
+  width: min(30vw, 132px);
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 7px 0 rgba(0, 0, 0, 0.28))
+    drop-shadow(0 0 11px rgba(223, 255, 103, 0.1));
+}
+
+.sprite-eye {
+  animation: eye-glow 1800ms ease-in-out infinite alternate;
+}
+
+.play-button {
+  position: relative;
+  min-width: 136px;
+  min-height: 58px;
+  padding: 13px 28px 15px;
+  color: var(--acid-eye);
+  font-family:
+    "KC Slime Time", "American Typewriter", ui-monospace, Menlo, Monaco,
+    Consolas, monospace;
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  background:
+    linear-gradient(180deg, rgba(15, 29, 23, 0.96), rgba(5, 9, 7, 0.96)),
+    radial-gradient(
+      ellipse at center,
+      rgba(223, 255, 103, 0.16),
+      transparent 62%
+    );
+  border: 2px solid #5a421e;
+  border-radius: 0;
+  box-shadow:
+    0 0 0 2px #080a06,
+    0 8px 0 rgba(0, 0, 0, 0.34),
+    0 0 18px rgba(223, 255, 103, 0.08);
+  cursor: pointer;
+  text-shadow: 0 2px 0 #020403;
+  transform: translateY(0);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 120ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease;
+}
+
+.play-button:hover:not(:disabled) {
+  filter: brightness(1.08) saturate(1.08);
+  transform: translateY(-2px);
+}
+
+.play-button:active:not(:disabled) {
+  transform: translateY(6px);
+  box-shadow:
+    0 0 0 2px #080a06,
+    0 2px 0 rgba(0, 0, 0, 0.34),
+    0 0 18px rgba(223, 255, 103, 0.12);
+}
+
+.play-button:focus-visible {
+  outline: var(--pixel) solid var(--acid-eye);
+  outline-offset: 10px;
+}
+
+.play-button:disabled {
+  cursor: wait;
+  filter: grayscale(0.34) brightness(0.72);
+}
+
+.play-button.is-playing {
+  color: var(--acid-eye);
+  background:
+    linear-gradient(180deg, rgba(24, 42, 32, 0.98), rgba(5, 9, 7, 0.96)),
+    radial-gradient(
+      ellipse at center,
+      rgba(223, 255, 103, 0.22),
+      transparent 62%
+    );
+  border-color: #5a421e;
+  box-shadow:
+    0 0 0 2px #080a06,
+    0 8px 0 rgba(0, 0, 0, 0.34),
+    0 0 24px rgba(223, 255, 103, 0.14);
+}
+
+.app-error {
+  max-width: 34rem;
+  min-height: 1.5rem;
+  margin: 22px 0 0;
+  color: var(--error);
+  font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+  text-align: center;
+  text-shadow: 0 2px 0 #120a06;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes title-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes member-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) scale(0.82);
+  }
+  62% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes member-idle {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -7px;
+  }
+}
+
+@keyframes eye-glow {
+  from {
+    filter: drop-shadow(0 0 0 rgba(223, 255, 103, 0));
+  }
+  to {
+    filter: drop-shadow(0 0 3px rgba(223, 255, 103, 0.88));
+  }
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    padding: 24px 14px 24px;
+  }
+
+  .app-title {
+    font-size: clamp(3.25rem, 18vw, 5.25rem);
+  }
+
+  .band-stage {
+    grid-template-columns: repeat(2, minmax(112px, 1fr));
+    gap: 8px 12px;
+    min-height: 430px;
+    padding: 26px 12px 42px;
+  }
+
+  .creature-sprite {
+    width: 118px;
+  }
+
+  .band-member {
+    min-height: 166px;
+  }
+
+  .play-button {
+    font-size: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+}

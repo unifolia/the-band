@@ -1,0 +1,6 @@
+node_modules/
+dist/
+src/wasm/
+target/
+rust/band_engine/target/
+.DS_Store
