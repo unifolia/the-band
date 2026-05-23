@@ -225,9 +225,9 @@ fn build_instrument_events(
     let mut events = Vec::new();
     for (part_index, part) in band.instruments.iter().enumerate() {
         let pan = match part_index {
-            0 => -0.48,
-            1 => 0.1,
-            _ => 0.45,
+            0 => -0.5,
+            1 => 0.0,
+            _ => 0.5,
         };
         let tail = seconds_to_samples(
             instrument_tail_seconds(part.bank) + INSTRUMENT_ECHO_SECONDS,
