@@ -35,7 +35,7 @@ export function createAppShell(root) {
   const stageTagline = document.createElement("p");
   stageTagline.className = "stage-tagline";
   stageTagline.ariaHidden = true;
-  stageTagline.textContent = "THE MUCKS";
+  stageTagline.textContent = "The Mucks";
 
   stageCopy.append(stageText, stageTagline);
   stage.append(stageCopy);

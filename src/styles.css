@@ -206,6 +206,7 @@ button {
   font-family:
     "KC Slime Time", "American Typewriter", ui-monospace, Menlo, Monaco,
     Consolas, monospace;
+  font-variant: small-caps;
   font-size: 4rem;
   font-weight: 500;
   position: relative;
@@ -313,7 +314,7 @@ button {
     Consolas, monospace;
   font-size: 4rem;
   font-weight: 500;
-  letter-spacing: -0.3rem;
+  letter-spacing: -0.2rem;
   line-height: 1;
   background:
     linear-gradient(180deg, rgba(15, 29, 23, 0.96), rgba(5, 9, 7, 0.96)),
