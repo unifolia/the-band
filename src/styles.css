@@ -260,7 +260,6 @@ button {
   display: inline-grid;
   place-items: center;
   min-width: 46px;
-  max-width: 108px;
   min-height: 24px;
   margin: 0 0 8px;
   padding: 3px 8px 4px;
