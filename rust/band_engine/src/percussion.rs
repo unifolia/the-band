@@ -24,10 +24,10 @@ pub enum PercussionVoiceKind {
     Clave,
     LogDrum,
     Shaker,
-    TinHit,
-    CanKnock,
+    CanKick,
+    CanSnare,
     Scrape,
-    LidTick,
+    AltScrape,
     Bayan,
     Dayan,
     NaTin,
@@ -87,10 +87,10 @@ impl PercussionBank {
                 PercussionVoiceKind::Shaker,
             ],
             PercussionBank::Cans => &[
-                PercussionVoiceKind::TinHit,
-                PercussionVoiceKind::CanKnock,
+                PercussionVoiceKind::CanKick,
+                PercussionVoiceKind::CanSnare,
                 PercussionVoiceKind::Scrape,
-                PercussionVoiceKind::LidTick,
+                PercussionVoiceKind::AltScrape,
             ],
             PercussionBank::Tabla => &[
                 PercussionVoiceKind::Bayan,
@@ -121,7 +121,10 @@ fn generate_voice(
     let pulses = rng.range_usize(pulse_min, pulse_max);
     let rotation = rng.range_usize(0, PERCUSSION_STEPS_PER_BAR - 1);
     let probability = rng.range_f32(probability_min, probability_max);
-    let base = rotate_pattern(&euclidean_pattern(PERCUSSION_STEPS_PER_BAR, pulses), rotation);
+    let base = rotate_pattern(
+        &euclidean_pattern(PERCUSSION_STEPS_PER_BAR, pulses),
+        rotation,
+    );
     let mut pattern = vec![false; PERCUSSION_STEPS];
     let mut hits = Vec::new();
 
@@ -139,8 +142,16 @@ fn generate_voice(
             };
             if rng.chance(keep_probability) {
                 let absolute_step = bar_offset + step;
-                let accent = if strong_step { 1.0 } else { rng.range_f32(0.68, 0.92) };
-                let bar_lift = if bar == 0 { 1.0 } else { rng.range_f32(0.88, 1.03) };
+                let accent = if strong_step {
+                    1.0
+                } else {
+                    rng.range_f32(0.68, 0.92)
+                };
+                let bar_lift = if bar == 0 {
+                    1.0
+                } else {
+                    rng.range_f32(0.88, 1.03)
+                };
                 pattern[absolute_step] = true;
                 hits.push(PercussionHit {
                     step: absolute_step,
@@ -173,18 +184,20 @@ fn generate_voice(
 
 fn voice_bounds(kind: PercussionVoiceKind) -> (usize, usize, f32, f32) {
     match kind {
-        PercussionVoiceKind::Kick | PercussionVoiceKind::Bayan => (3, 5, 0.82, 1.0),
-        PercussionVoiceKind::Snare | PercussionVoiceKind::Dayan => (2, 4, 0.76, 0.95),
-        PercussionVoiceKind::Hat
-        | PercussionVoiceKind::Shaker
-        | PercussionVoiceKind::LidTick
-        | PercussionVoiceKind::NaTin => (7, 11, 0.72, 0.93),
-        PercussionVoiceKind::Tom
-        | PercussionVoiceKind::LogDrum
-        | PercussionVoiceKind::CanKnock
-        | PercussionVoiceKind::MutedTap => (2, 5, 0.68, 0.9),
+        PercussionVoiceKind::Kick | PercussionVoiceKind::CanKick | PercussionVoiceKind::Bayan => {
+            (3, 5, 0.82, 1.0)
+        }
+        PercussionVoiceKind::Snare | PercussionVoiceKind::CanSnare | PercussionVoiceKind::Dayan => {
+            (2, 4, 0.76, 0.95)
+        }
+        PercussionVoiceKind::Hat | PercussionVoiceKind::Shaker | PercussionVoiceKind::NaTin => {
+            (7, 11, 0.72, 0.93)
+        }
+        PercussionVoiceKind::Tom | PercussionVoiceKind::LogDrum | PercussionVoiceKind::MutedTap => {
+            (2, 5, 0.68, 0.9)
+        }
         PercussionVoiceKind::Woodblock | PercussionVoiceKind::Clave => (4, 7, 0.7, 0.94),
-        PercussionVoiceKind::TinHit | PercussionVoiceKind::Scrape => (4, 8, 0.62, 0.86),
+        PercussionVoiceKind::Scrape | PercussionVoiceKind::AltScrape => (4, 8, 0.62, 0.86),
     }
 }
 
@@ -193,17 +206,35 @@ mod tests {
     use super::*;
 
     #[test]
-    fn percussion_bank_has_three_or_four_voices_and_is_not_silent() {
-        for bank in PercussionBank::ALL {
+    fn percussion_banks_have_expected_voices_and_are_not_silent() {
+        for bank in [
+            PercussionBank::Drums,
+            PercussionBank::Woods,
+            PercussionBank::Cans,
+            PercussionBank::Tabla,
+        ] {
             let mut rng = Rng64::new(bank as u64 + 77);
             let part = generate_percussion(bank, &mut rng);
-            assert!((3..=4).contains(&part.voices.len()));
+            assert_eq!(part.voices.len(), bank.voices().len());
             assert!(part.voices.iter().any(|voice| !voice.hits.is_empty()));
             assert!(part
                 .voices
                 .iter()
                 .all(|voice| voice.pattern.len() == PERCUSSION_STEPS));
         }
+    }
+
+    #[test]
+    fn cans_bank_uses_current_four_voice_set() {
+        assert_eq!(
+            PercussionBank::Cans.voices(),
+            [
+                PercussionVoiceKind::CanKick,
+                PercussionVoiceKind::CanSnare,
+                PercussionVoiceKind::Scrape,
+                PercussionVoiceKind::AltScrape,
+            ]
+        );
     }
 
     #[test]

@@ -17,7 +17,9 @@ pub fn render_instrument(
         InstrumentBank::Bass => bass(frequency, t, duration, velocity),
         InstrumentBank::Pads => pads(frequency, t, duration, velocity, event_seed),
         InstrumentBank::Synth => synth_lead(frequency, t, duration, velocity, event_seed),
-        InstrumentBank::Clarinet => clarinet(frequency, t, duration, velocity, event_seed, sample_index),
+        InstrumentBank::Clarinet => {
+            clarinet(frequency, t, duration, velocity, event_seed, sample_index)
+        }
     }
 }
 
@@ -37,10 +39,10 @@ pub fn render_percussion(
         PercussionVoiceKind::Clave => woody(t, velocity, 1180.0, 0.04, event_seed),
         PercussionVoiceKind::LogDrum => woody(t, velocity, 210.0, 0.16, event_seed),
         PercussionVoiceKind::Shaker => shaker(t, velocity, event_seed, sample_index),
-        PercussionVoiceKind::TinHit => metallic(t, velocity, 520.0, event_seed),
-        PercussionVoiceKind::CanKnock => metallic(t, velocity, 240.0, event_seed) * 0.8,
-        PercussionVoiceKind::Scrape => scrape(t, velocity, event_seed, sample_index),
-        PercussionVoiceKind::LidTick => metallic(t, velocity, 1400.0, event_seed) * 0.65,
+        PercussionVoiceKind::CanKick => can_kick(t, velocity, event_seed, sample_index),
+        PercussionVoiceKind::CanSnare => can_snare(t, velocity, event_seed, sample_index),
+        PercussionVoiceKind::Scrape => scrape(t, velocity, event_seed, sample_index) * 0.8,
+        PercussionVoiceKind::AltScrape => alt_scrape(t, velocity, event_seed, sample_index),
         PercussionVoiceKind::Bayan => tabla_low(t, velocity, event_seed),
         PercussionVoiceKind::Dayan => tabla_tuned(t, velocity, 270.0, event_seed),
         PercussionVoiceKind::NaTin => tabla_tuned(t, velocity, 820.0, event_seed) * 0.7,
@@ -60,17 +62,21 @@ pub fn instrument_tail_seconds(bank: InstrumentBank) -> f32 {
 
 pub fn percussion_tail_seconds(kind: PercussionVoiceKind) -> f32 {
     match kind {
-        PercussionVoiceKind::Kick | PercussionVoiceKind::Bayan => 0.52,
-        PercussionVoiceKind::Snare | PercussionVoiceKind::Scrape => 0.28,
+        PercussionVoiceKind::Kick | PercussionVoiceKind::CanKick | PercussionVoiceKind::Bayan => {
+            0.52
+        }
+        PercussionVoiceKind::Snare
+        | PercussionVoiceKind::CanSnare
+        | PercussionVoiceKind::Scrape
+        | PercussionVoiceKind::AltScrape => 0.28,
         PercussionVoiceKind::Hat
         | PercussionVoiceKind::Shaker
-        | PercussionVoiceKind::LidTick
         | PercussionVoiceKind::NaTin
         | PercussionVoiceKind::MutedTap => 0.13,
         PercussionVoiceKind::Tom | PercussionVoiceKind::LogDrum | PercussionVoiceKind::Dayan => {
             0.34
         }
-        _ => 0.22,
+        PercussionVoiceKind::Woodblock | PercussionVoiceKind::Clave => 0.22,
     }
 }
 
@@ -84,9 +90,8 @@ fn harp(frequency: f32, t: f32, velocity: f32, seed: u64, sample_index: u64) -> 
 
 fn bass(frequency: f32, t: f32, duration: f32, velocity: f32) -> f32 {
     let env = adsr(t, duration, 0.016, 0.08, 0.72, 0.09);
-    let tone = sine(frequency, t) * 0.72
-        + triangle(frequency * 0.5, t) * 0.22
-        + saw(frequency, t) * 0.08;
+    let tone =
+        sine(frequency, t) * 0.72 + triangle(frequency * 0.5, t) * 0.22 + saw(frequency, t) * 0.08;
     (tone * 1.25).tanh() * env * velocity * 0.78
 }
 
@@ -134,10 +139,27 @@ fn kick(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
     (body + transient) * velocity * 0.92
 }
 
+fn can_kick(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
+    let pitch = 34.0 + 68.0 * (-t * 24.0).exp();
+    let body = (sine(pitch, t) * 0.82 + triangle(pitch * 0.5, t) * 0.24) * (-t * 6.4).exp();
+    let knock = sine(82.0 + seeded_offset(seed) * 5.0, t) * (-t * 24.0).exp() * 0.18;
+    let transient = smooth_noise(seed ^ 0x7A11, sample_index, 4) * (-t * 52.0).exp() * 0.09;
+    (body + knock + transient) * velocity * 0.96
+}
+
 fn snare(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
     let noise = smooth_noise(seed ^ 0x51A4, sample_index, 4) * (-t * 18.0).exp();
     let body = sine(185.0, t) * (-t * 13.0).exp() * 0.32;
     (noise * 0.54 + body) * velocity * 0.58
+}
+
+fn can_snare(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
+    let noise = smooth_noise(seed ^ 0x51A4, sample_index, 3) * (-t * 19.0).exp();
+    let body = sine(172.0 + seeded_offset(seed) * 8.0, t) * (-t * 12.0).exp() * 0.25;
+    let ring = (sine(420.0 + seeded_offset(seed ^ 0xC011) * 18.0, t) * 0.22
+        + sine(735.0 + seeded_offset(seed ^ 0x5A7E) * 24.0, t) * 0.12)
+        * (-t * 15.0).exp();
+    (noise * 0.46 + body + ring) * velocity * 0.54
 }
 
 fn hat(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
@@ -162,18 +184,22 @@ fn shaker(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
     grain * (-t * 26.0).exp() * velocity * 0.28
 }
 
-fn metallic(t: f32, velocity: f32, frequency: f32, seed: u64) -> f32 {
-    let modulator = sine(frequency * 1.43, t) * 2.2;
-    let carrier = (TAU * frequency * t + modulator).sin();
-    let partial = sine(frequency * 2.71, t) * 0.24 + sine(frequency * 3.89, t) * 0.16;
-    (carrier * 0.68 + partial) * (-t * 12.5).exp() * velocity * 0.42
-        * (0.95 + seeded_offset(seed).abs() * 0.1)
-}
-
 fn scrape(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
     let comb = (noise(seed, sample_index) - noise(seed ^ 0x9933, sample_index / 2)) * 0.5;
     let flutter = 0.6 + 0.4 * sine(18.0, t).abs();
     comb * flutter * (-t * 7.0).exp() * velocity * 0.32
+}
+
+fn alt_scrape(t: f32, velocity: f32, seed: u64, sample_index: u64) -> f32 {
+    let grain =
+        smooth_noise(seed ^ 0xA77A, sample_index, 2) - smooth_noise(seed ^ 0x533D, sample_index, 9);
+    let rasp =
+        noise(seed ^ 0x1CE5, sample_index / 3) - smooth_noise(seed ^ 0x7229, sample_index, 11);
+    let drag = 0.48 + 0.52 * sine(11.0 + seeded_offset(seed).abs() * 2.0, t).abs();
+    let ring = (sine(310.0 + seeded_offset(seed ^ 0xBEEF) * 14.0, t) * 0.12
+        + sine(465.0 + seeded_offset(seed ^ 0xD00D) * 18.0, t) * 0.07)
+        * (-t * 8.6).exp();
+    ((grain * 0.42 + rasp * 0.22) * drag + ring) * (-t * 5.8).exp() * velocity * 0.34
 }
 
 fn tabla_low(t: f32, velocity: f32, seed: u64) -> f32 {
@@ -183,8 +209,8 @@ fn tabla_low(t: f32, velocity: f32, seed: u64) -> f32 {
 }
 
 fn tabla_tuned(t: f32, velocity: f32, frequency: f32, seed: u64) -> f32 {
-    let tone = sine(frequency * (1.0 + seeded_offset(seed) * 0.006), t)
-        + sine(frequency * 2.0, t) * 0.22;
+    let tone =
+        sine(frequency * (1.0 + seeded_offset(seed) * 0.006), t) + sine(frequency * 2.0, t) * 0.22;
     let click = triangle(frequency * 3.1, t) * (-t * 75.0).exp() * 0.2;
     (tone * (-t * 15.0).exp() + click) * velocity * 0.44
 }

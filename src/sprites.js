@@ -302,8 +302,8 @@ function addInstrumentSprite(svg, instrument) {
       addIconRect(svg, x + 2, y + 4, 8, 6, metalDark);
       addIconRect(svg, x + 3, y + 4, 2, 5, metal);
       addIconRect(svg, x + 2, y + 10, 8, 1, outline);
-      addIconRect(svg, x + 8, y + 5, 1, 1, brass);
-      addIconRect(svg, x + 6, y + 7, 1, 1, brass);
+      addIconRect(svg, x + 6, y + 5, 3, 1, brass);
+      addIconRect(svg, x + 6, y + 7, 3, 1, brass);
       break;
 
     case "tabla":
@@ -317,13 +317,13 @@ function addInstrumentSprite(svg, instrument) {
       break;
 
     case "harp":
-      addIconRect(svg, x + 2, y + 1, 2, 10, brass);
+      addIconRect(svg, x + 2, y, 2, 10, brass);
       addIconRect(svg, x + 4, y + 1, 5, 1, brass);
       addIconRect(svg, x + 8, y + 2, 2, 8, brass);
       addIconRect(svg, x + 3, y + 10, 8, 1, outline);
-      addIconRect(svg, x + 5, y + 3, 1, 7, ivory);
-      addIconRect(svg, x + 7, y + 3, 1, 7, ivory);
-      addIconRect(svg, x + 9, y + 3, 1, 6, ivory);
+      addIconRect(svg, x + 4, y + 2, 1, 8, ivory);
+      addIconRect(svg, x + 6, y + 2, 1, 8, ivory);
+      addIconRect(svg, x + 8, y + 3, 1, 7, ivory);
       break;
 
     case "bass":
