@@ -75,7 +75,7 @@ pub struct Band {
 
 pub fn generate_band(seed: u64) -> Band {
     let mut rng = Rng64::from_seed_and_salt(seed, 0xBADC_0FFE_E0DD_F00D);
-    let tempo_bpm = rng.range_u32(80, 160);
+    let tempo_bpm = rng.range_u32(80, 150);
     let root = choose_root(&mut rng);
     let mode = choose_mode(&mut rng);
     let harmonic_framework = generate_harmony(&mut rng);
@@ -215,15 +215,7 @@ fn generate_phrase(
     }
 
     if notes.is_empty() {
-        let midi = choose_pitch(
-            bank,
-            None,
-            root_pitch_class,
-            mode,
-            &harmony[0],
-            0,
-            rng,
-        );
+        let midi = choose_pitch(bank, None, root_pitch_class, mode, &harmony[0], 0, rng);
         slots[0] = SlotCell {
             kind: SlotKind::Note,
             midi: Some(midi),
@@ -278,12 +270,8 @@ fn choose_pitch(
     rng: &mut Rng64,
 ) -> u8 {
     let profile = bank.profile();
-    let all_candidates = mode_midis_in_range(
-        profile.low_midi,
-        profile.high_midi,
-        root_pitch_class,
-        mode,
-    );
+    let all_candidates =
+        mode_midis_in_range(profile.low_midi, profile.high_midi, root_pitch_class, mode);
     let bounded_candidates = if let Some(previous) = previous_midi {
         let bounded = all_candidates
             .iter()
@@ -371,7 +359,7 @@ mod tests {
     fn generated_band_has_required_roles_and_ranges() {
         for seed in 1..96 {
             let band = generate_band(seed);
-            assert!((80..=160).contains(&band.tempo_bpm));
+            assert!((80..=150).contains(&band.tempo_bpm));
             assert_eq!(band.members.len(), 4);
             assert_eq!(band.members[0].role, MemberRole::Percussionist);
             assert_eq!(
@@ -420,7 +408,11 @@ mod tests {
     fn generated_band_is_not_musically_silent() {
         for seed in 1..32 {
             let band = generate_band(seed);
-            assert!(band.percussion.voices.iter().any(|voice| !voice.hits.is_empty()));
+            assert!(band
+                .percussion
+                .voices
+                .iter()
+                .any(|voice| !voice.hits.is_empty()));
             assert!(band.instruments.iter().all(|part| !part.notes.is_empty()));
         }
     }

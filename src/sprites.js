@@ -336,8 +336,8 @@ function addInstrumentSprite(svg, instrument) {
       break;
 
     case "pads":
-      addIconRect(svg, x + 1, y + 3, 10, 7, outline);
-      addIconRect(svg, x + 2, y + 4, 8, 5, "#203126");
+      addIconRect(svg, x + 1, y + 3, 10, 7, "#6B3F20");
+      addIconRect(svg, x + 2, y + 4, 8, 5, "#4C2D17");
       addIconRect(svg, x + 3, y + 5, 2, 2, glow);
       addIconRect(svg, x + 6, y + 5, 2, 2, "#86a94b");
       addIconRect(svg, x + 8, y + 7, 1, 1, brass);
@@ -360,7 +360,7 @@ function addInstrumentSprite(svg, instrument) {
       addIconRect(svg, x + 4, y + 4, 2, 2, reed);
       addIconRect(svg, x + 6, y + 6, 2, 2, reed);
       addIconRect(svg, x + 8, y + 8, 2, 2, reed);
-      addIconRect(svg, x + 3, y + 1, 2, 1, brass);
+      addIconRect(svg, x + 2, y + 2, 1, 1, brass);
       addIconRect(svg, x + 5, y + 5, 1, 1, brass);
       addIconRect(svg, x + 7, y + 7, 1, 1, brass);
       addIconRect(svg, x + 9, y + 10, 3, 1, brass);
