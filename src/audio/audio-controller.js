@@ -9,7 +9,7 @@ import {
 } from "./fallback-renderer.js";
 
 const FADE_SECONDS = 0.035;
-const MASTER_LEVEL = 0.82;
+const MASTER_LEVEL = 1;
 let workletObjectUrl = "";
 let bufferWorkletObjectUrl = "";
 let probeWorkletObjectUrl = "";

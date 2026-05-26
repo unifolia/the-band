@@ -10,6 +10,7 @@ use crate::utils::{clamp_unit, equal_power_pan, seconds_to_samples, soft_limit};
 const MAX_RENDER_FRAMES: usize = 4096;
 const INSTRUMENT_ECHO_SECONDS: f32 = 0.185;
 const PERCUSSION_ECHO_SECONDS: f32 = 0.115;
+const OUTPUT_DRIVE: f32 = 0.58;
 
 #[derive(Clone, Debug)]
 struct InstrumentRenderEvent {
@@ -194,8 +195,8 @@ impl RenderEngine {
             }
         }
 
-        let left = soft_limit(left * 0.42);
-        let right = soft_limit(right * 0.42);
+        let left = soft_limit(left * OUTPUT_DRIVE);
+        let right = soft_limit(right * OUTPUT_DRIVE);
         (clamp_unit(left), clamp_unit(right))
     }
 }
